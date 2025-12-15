@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NFL Database Project - By Jacob Gustitus</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(to bottom, #013369 0%, #f4f4f4 180px);
+      text-align: center;
+    }
+
+    header, footer {
+      background: #013369;
+      color: white;
+      padding: 20px;
+    }
+
+    main {
+      padding: 30px;
+    }
+
+    .section {
+      width: 70%;
+      margin: 20px auto;
+      text-align: left;
+    }
+
+    .dropdown-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      background: #003594;
+      color: white;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .dropdown-btn:hover {
+      background: #002244;
+    }
+
+    .dropdown-content {
+      display: none;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      padding: 15px;
+    }
+
+    .dropdown-content.open {
+      display: block;
+    }
+
+    .team-btn {
+      width: 100%;
+      background: #e6e6e6;
+      border: none;
+      padding: 10px;
+      margin-top: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .team-details {
+      display: none;
+      padding: 10px 20px;
+      background: #f9f9f9;
+      border-left: 4px solid #003594;
+    }
+
+    .team-details.open {
+      display: block;
+    }
+
+    form {
+      margin-top: 30px;
+      background: white;
+      padding: 15px;
+      border: 1px solid #ccc;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: calc(100% - 20px);
+    }
+
+    .submit-btn {
+      padding: 10px;
+      margin-top: 10px;
+      background: #003594;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      background: #002244;
+    }
+
+    .item {
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>NFL Database Project</h1>
+</header>
+
+<main>
+
+  <!-- TEAMS SECTION -->
+  <section class="section">
+    <button class="dropdown-btn" id="teamsToggle">Teams</button>
+    <div class="dropdown-content" id="teamsContent"></div>
+
+    <form id="teamForm">
+      <h3>Add Team</h3>
+      <input type="text" id="teamName" placeholder="Team Name" required>
+      <input type="text" id="teamCity" placeholder="City" required>
+      <input type="number" id="teamWins" placeholder="Wins" required>
+      <input type="number" id="teamLosses" placeholder="Losses" required>
+      <button class="submit-btn" type="submit">Add Team</button>
+    </form>
+  </section>
+
+  <!-- PLAYERS SECTION -->
+  <section class="section">
+    <button class="dropdown-btn" id="playersToggle">Players</button>
+    <div class="dropdown-content" id="playersContent"></div>
+
+    <form id="playerForm">
+      <h3>Add Player</h3>
+      <input type="text" id="playerName" placeholder="Player Name" required>
+      <input type="text" id="playerTeam" placeholder="Team" required>
+      <input type="text" id="playerPosition" placeholder="Position" required>
+      <input type="text" id="playerDraft" placeholder="Draft Info (ex: 2020 Round 1)" required>
+      <button class="submit-btn" type="submit">Add Player</button>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2025 Jacob Gustitus xD </p>
+</footer>
+
+<script>
+  const teams = [
+    { name: "Dallas Cowboys", city: "Dallas", wins: 5, losses: 1 },
+    { name: "Philadelphia Eagles", city: "Philadelphia", wins: 4, losses: 2 },
+    { name: "New York Giants", city: "New York", wins: 2, losses: 4 },
+    { name: "Washington Commanders", city: "Washington", wins: 1, losses: 5 }
+  ];
+
+  const players = [
+    { name: "Dak Prescott", team: "Dallas Cowboys", position: "QB", drafted: "2016 Round 4" },
+    { name: "Jalen Hurts", team: "Philadelphia Eagles", position: "QB", drafted: "2020 Round 2" },
+    { name: "Jaxson Dart", team: "New York Giants", position: "QB", drafted: "2025 Round 1" },
+    { name: "Terry McLaurin", team: "Washington Commanders", position: "WR", drafted: "2019 Round 3" }
+  ];
+
+  const teamsDiv = document.getElementById("teamsContent");
+  const playersDiv = document.getElementById("playersContent");
+
+  function renderTeams() {
+    teamsDiv.innerHTML = "";
+    teams.forEach(team => {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = `
+        <button class="team-btn">${team.name}</button>
+        <div class="team-details">
+          <p><strong>City:</strong> ${team.city}</p>
+          <p><strong>Wins:</strong> ${team.wins}</p>
+          <p><strong>Losses:</strong> ${team.losses}</p>
+        </div>
+      `;
+      teamsDiv.appendChild(wrapper);
+    });
+
+    document.querySelectorAll(".team-btn").forEach(btn => {
+      btn.onclick = () => btn.nextElementSibling.classList.toggle("open");
+    });
+  }
+
+  function renderPlayers() {
+    playersDiv.innerHTML = "";
+    players.forEach(player => {
+      playersDiv.innerHTML += `
+        <div class="item">
+          <strong>${player.name}</strong><br>
+          Team: ${player.team}<br>
+          Position: ${player.position}<br>
+          Drafted: ${player.drafted}
+        </div>
+      `;
+    });
+  }
+
+  document.getElementById("teamsToggle").onclick = () =>
+    teamsDiv.classList.toggle("open");
+
+  document.getElementById("playersToggle").onclick = () =>
+    playersDiv.classList.toggle("open");
+
+  document.getElementById("teamForm").onsubmit = e => {
+    e.preventDefault();
+    teams.push({
+      name: teamName.value,
+      city: teamCity.value,
+      wins: teamWins.value,
+      losses: teamLosses.value
+    });
+    renderTeams();
+    e.target.reset();
+  };
+
+  document.getElementById("playerForm").onsubmit = e => {
+    e.preventDefault();
+    players.push({
+      name: playerName.value,
+      team: playerTeam.value,
+      position: playerPosition.value,
+      drafted: playerDraft.value
+    });
+    renderPlayers();
+    e.target.reset();
+  };
+
+  renderTeams();
+  renderPlayers();
+</script>
+
+</body>
+</html>
